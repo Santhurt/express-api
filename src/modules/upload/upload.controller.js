@@ -1,3 +1,5 @@
+import { AprendizImage } from "./upload.model.js";
+
 export const uploadImage = async (req, res) => {
     try {
         if (!req.file) {
@@ -7,8 +9,11 @@ export const uploadImage = async (req, res) => {
             });
         }
 
+        const id = req.params.id;
         const imageUrl = `${process.env.BASE_URL || "http://localhost:3000"}
             /uploads/aprendiz/${req.file.filename}`;
+
+        const result = await AprendizImage.update(id, imageUrl);
 
         return res.status(200).json({
             success: true,
@@ -18,6 +23,7 @@ export const uploadImage = async (req, res) => {
                 size: req.file.size,
                 url: imageUrl,
             },
+            result: result,
         });
     } catch (error) {
         console.log(error);
